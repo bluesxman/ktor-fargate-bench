@@ -1,1 +1,4 @@
 .terraform/
+.idea/
+.gradle/
+out/
