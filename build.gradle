@@ -54,3 +54,9 @@ dependencies {
     // Project dependencies
     compile "software.amazon.awssdk:s3:2.4.8"
 }
+
+shadowJar {
+    baseName = 'my-application'
+    classifier = null
+    version = null
+}

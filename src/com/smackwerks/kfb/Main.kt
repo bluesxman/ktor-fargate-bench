@@ -13,7 +13,7 @@ import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
 
-fun main(args: Array<String>) {
+fun main() {
     val server = embeddedServer(Netty, 8080) {
         routing {
             get("/") {
