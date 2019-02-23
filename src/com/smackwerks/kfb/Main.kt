@@ -21,8 +21,13 @@ fun main(args: Array<String>) {
             }
 
             get("/s3") {
-                val creds = ProfileCredentialsProvider.builder().profileName("ktor-admin").build()
-                val s3 = S3Client.builder().region(Region.US_EAST_1).credentialsProvider(creds).build()
+                val creds = ProfileCredentialsProvider.builder()
+                    .profileName("ktor-admin")
+                    .build()
+                val s3 = S3Client.builder()
+                    .region(Region.US_EAST_1)
+                    .credentialsProvider(creds)
+                    .build()
                 val get = GetObjectRequest.builder()
                     .bucket("com.smackwerks-kfb")
                     .key("hello.json")
