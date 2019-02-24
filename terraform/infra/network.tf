@@ -1,3 +1,10 @@
+terraform {
+  backend "s3" {
+    key    = "kfb/network.tfstate"
+    region = "us-east-1"
+  }
+}
+
 provider "aws" {
   region = "${var.region}"
 }
@@ -106,4 +113,12 @@ resource "aws_route_table_association" "private" {
   count          = "${var.az_count}"
   subnet_id      = "${element(aws_subnet.private.*.id, count.index)}"
   route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
+}
+
+output "public_subnet_ids" {
+  value = "${aws_subnet.public.*.id}"
+}
+
+output "private_subnet_ids" {
+  value = "${aws_subnet.private.*.id}"
 }
