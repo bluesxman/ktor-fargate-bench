@@ -28,6 +28,6 @@ resource "aws_s3_bucket" "data" {
 
   tags = {
       Description = "Data source for ktor-fargate-bench"
-      Project = "ktor-fargate-bench"
+      Project = "kfb"
   }
 }
