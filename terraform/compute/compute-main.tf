@@ -53,6 +53,11 @@ resource "aws_security_group" "lb" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags {
+    Name = "${local.project}-sg-load-balancer"
+    Project = "${local.project}"
+  }
 }
 
 resource "aws_security_group" "ecs_tasks" {
@@ -73,6 +78,11 @@ resource "aws_security_group" "ecs_tasks" {
     from_port   = 0
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name = "${local.project}-sg-ecs-tasks"
+    Project = "${local.project}"
   }
 }
 
