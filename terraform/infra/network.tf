@@ -115,6 +115,9 @@ resource "aws_route_table_association" "private" {
   route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
+output "vpc_id" {
+  value = "${aws_vpc.main.id}"
+}
 output "public_subnet_ids" {
   value = "${aws_subnet.public.*.id}"
 }
