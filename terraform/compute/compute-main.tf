@@ -4,3 +4,7 @@ terraform {
     region = "us-east-1"
   }
 }
+
+resource "aws_ecr_repository" "kfb" {
+  name = "com.smackwerks.kfb.ecr"
+}
