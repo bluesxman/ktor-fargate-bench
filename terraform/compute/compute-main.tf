@@ -232,11 +232,6 @@ resource "aws_iam_policy" "ecs_service_linking" {
   policy = "${data.aws_iam_policy_document.ecs_service_linked_role.json}"
 }
 
-resource "aws_iam_service_linked_role" "kfb" {
-  aws_service_name = "ecs.amazonaws.com"
-}
-
-
 ### Compute Cluster
 resource "aws_ecs_cluster" "main" {
   name = "${local.project}-cluster"
