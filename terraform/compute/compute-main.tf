@@ -18,7 +18,7 @@ locals {
   app_image = "${aws_ecr_repository.kfb.repository_url}:latest"
   task_cpu = 2048
   task_memory = 4096
-  app_port = 8080
+  app_port = 80
   service_name = "${local.project}-service"
 
   task_def = <<DEF
@@ -102,8 +102,8 @@ resource "aws_security_group" "ecs_tasks" {
   # Traffic to the ECS cluster should only come from the ALB
   ingress {
     protocol        = "tcp"
-    from_port       = "${var.app_port}"
-    to_port         = "${var.app_port}"
+    from_port       = "${local.app_port}"
+    to_port         = "${local.app_port}"
     security_groups = ["${aws_security_group.lb.id}"]
   }
 
@@ -268,7 +268,7 @@ resource "aws_ecs_service" "main" {
   load_balancer {
     target_group_arn = "${aws_alb_target_group.app.id}"
     container_name   = "${local.project}-app"
-    container_port   = "${var.app_port}"
+    container_port   = "${local.app_port}"
   }
 
   depends_on = [
