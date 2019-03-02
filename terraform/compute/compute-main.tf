@@ -169,7 +169,8 @@ data "aws_iam_policy_document" "task_execution" {
     "ecr:BatchGetImage"
    ]
 
-   resources = ["${aws_ecr_repository.kfb.arn}"]
+//   resources = ["${aws_ecr_repository.kfb.arn}"]
+   resources = ["*"]
  }
 
  statement {
