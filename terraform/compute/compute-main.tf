@@ -18,9 +18,11 @@ locals {
   app_image = "${aws_ecr_repository.kfb.repository_url}:latest"
   task_cpu = 2048
   task_memory = 4096
-  app_port = 80
+  app_port = 8080
+  elb_port = 80
   service_name = "${local.project}-service"
 
+  # TODO: Test removing hostPort in the port mappings
   task_def = <<DEF
 [
   {
@@ -70,14 +72,14 @@ resource "aws_ecr_repository" "kfb" {
 
 ### Security
 resource "aws_security_group" "lb" {
-  name        = "cb-load-balancer-security-group"
+  name        = "${local.project}-load-balancer-security-group"
   description = "controls access to the ALB"
   vpc_id      = "${local.vpc_id}"
 
   ingress {
     protocol    = "tcp"
-    from_port   = 3000
-    to_port     = 3000
+    from_port   = "${local.elb_port}"
+    to_port     = "${local.elb_port}"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -95,14 +97,14 @@ resource "aws_security_group" "lb" {
 }
 
 resource "aws_security_group" "ecs_tasks" {
-  name        = "cb-ecs-tasks-security-group"
+  name        = "${local.project}-ecs-tasks-security-group"
   description = "allow inbound access from the ALB only"
   vpc_id      = "${local.vpc_id}"
 
   # Traffic to the ECS cluster should only come from the ALB
   ingress {
     protocol        = "tcp"
-    from_port       = "${local.app_port}"
+    from_port       = "${local.elb_port}"
     to_port         = "${local.app_port}"
     security_groups = ["${aws_security_group.lb.id}"]
   }
@@ -122,14 +124,14 @@ resource "aws_security_group" "ecs_tasks" {
 
 ### Load Balancer
 resource "aws_alb" "main" {
-  name            = "${local.project}load-balancer"
+  name            = "${local.project}-load-balancer"
   subnets         = ["${local.public_subnets}"]  # beware of list bugs:  https://github.com/hashicorp/terraform/issues/13869
   security_groups = ["${aws_security_group.lb.id}"]
 }
 
 resource "aws_alb_target_group" "app" {
   name        = "${local.project}-target-group"
-  port        = 80
+  port        = "${local.app_port}"
   protocol    = "HTTP"
   vpc_id      = "${local.vpc_id}"
   target_type = "ip"
@@ -147,7 +149,7 @@ resource "aws_alb_target_group" "app" {
 
 resource "aws_alb_listener" "front_end" {
   load_balancer_arn = "${aws_alb.main.id}"
-  port              = "3000"
+  port              = "${local.elb_port}"
   protocol          = "HTTP"
 
   # Redirect all traffic from the ALB to the target group
@@ -252,7 +254,8 @@ resource "aws_ecs_service" "main" {
   name            = "${local.service_name}"
   cluster         = "${aws_ecs_cluster.main.id}"
   task_definition = "${aws_ecs_task_definition.app.arn}"
-  desired_count   = "${local.task_count}"
+  desired_count   = 1
+//  desired_count   = "${local.task_count}"
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -272,7 +275,7 @@ resource "aws_ecs_service" "main" {
   ]
 }
 
-# logs.tf
+### Logging
 
 # Set up cloudwatch group and log stream and retain logs for 30 days
 resource "aws_cloudwatch_log_group" "kfb" {
@@ -292,4 +295,8 @@ resource "aws_cloudwatch_log_stream" "kfb" {
 ### Outputs
 output "ecr_url" {
   value = "${aws_ecr_repository.kfb.repository_url}"
+}
+
+output "alb_domain_name" {
+  value = "${aws_alb.main.dns_name}"
 }
