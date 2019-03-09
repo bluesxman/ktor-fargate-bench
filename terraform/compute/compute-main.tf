@@ -301,23 +301,6 @@ resource "aws_ecs_service" "main" {
   ]
 }
 
-### Logging
-
-# Set up cloudwatch group and log stream and retain logs for 30 days
-resource "aws_cloudwatch_log_group" "kfb" {
-  name              = "/ecs/${local.project}-app"
-  retention_in_days = 30
-
-  tags {
-    Name = "${local.project}-log-group"
-  }
-}
-
-resource "aws_cloudwatch_log_stream" "kfb" {
-  name           = "${local.project}-log-stream"
-  log_group_name = "${aws_cloudwatch_log_group.kfb.name}"
-}
-
 ### Outputs
 output "alb_domain_name" {
   value = "${aws_alb.main.dns_name}"
