@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    key    = "data.tfstate"
+    key    = "kfb/data.tfstate"
     region = "us-east-1"
   }
 }
@@ -27,7 +27,20 @@ resource "aws_s3_bucket" "data" {
   }
 
   tags = {
-      Description = "Data source for ktor-fargate-bench"
-      Project = "kfb"
+    Description = "Data source for ktor-fargate-bench"
+    Project = "kfb"
+    Name = "KfbDataBucket"
   }
+}
+
+output "bucket_id" {
+  value = "${aws_s3_bucket.data.id}"
+}
+
+output "bucket_arn" {
+  value = "${aws_s3_bucket.data.arn}"
+}
+
+output "bucket_domain_name" {
+  value = "${aws_s3_bucket.data.bucket_domain_name}"
 }

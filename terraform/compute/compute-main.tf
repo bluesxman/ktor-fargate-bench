@@ -11,6 +11,7 @@ provider "aws" {
 
 locals {
   project = "kfb"
+  backend_bucket = "com.smackwerks-tfstate"
   vpc_id = "${data.terraform_remote_state.network.vpc_id}"
   public_subnets = "${data.terraform_remote_state.network.public_subnet_ids}"
   private_subnets = "${data.terraform_remote_state.network.private_subnet_ids}"
@@ -54,8 +55,18 @@ data "terraform_remote_state" "network" {
   backend = "s3"
 
   config {
-    bucket = "com.smackwerks-tfstate"
+    bucket = "${local.backend_bucket}"
     key    = "${local.project}/network.tfstate"
+    region = "${var.region}"
+  }
+}
+
+data "terraform_remote_state" "data" {
+  backend = "s3"
+
+  config {
+    bucket = "${local.backend_bucket}"
+    key    = "${local.project}/data.tfstate"
     region = "${var.region}"
   }
 }
@@ -172,7 +183,7 @@ data "aws_iam_policy_document" "task_execution" {
    ]
 
 //   resources = ["${aws_ecr_repository.kfb.arn}"]
-   resources = ["*"]
+   resources = ["*"]  # TODO: lock down the resources more
  }
 
  statement {
@@ -212,15 +223,13 @@ resource "aws_iam_role_policy_attachment" "task_execution" {
   role = "${aws_iam_role.task_execution.name}"
 }
 
-
 # Setup the task role.  Read on s3
-# TODO: read remote state of data stack to get the bucket name
 data "aws_iam_policy_document" "task_s3" {
   statement {
     actions = [
       "s3:GetObject"
     ]
-    resources = ["arn:aws:s3:::com.smackwerks-kfb/*"]
+    resources = ["${data.terraform_remote_state.data.bucket_arn}/*"]
   }
 }
 
