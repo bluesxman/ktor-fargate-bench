@@ -212,6 +212,31 @@ resource "aws_iam_role_policy_attachment" "task_execution" {
   role = "${aws_iam_role.task_execution.name}"
 }
 
+
+# Setup the task role.  Read on s3
+# TODO: read remote state of data stack to get the bucket name
+data "aws_iam_policy_document" "task_s3" {
+  statement {
+    actions = [
+      "s3:GetObject"
+    ]
+    resources = ["arn:aws:s3:::com.smackwerks-kfb/*"]
+  }
+}
+
+resource "aws_iam_policy" "task_s3" {
+  policy = "${data.aws_iam_policy_document.task_s3.json}"
+}
+
+resource "aws_iam_role" "task" {
+  assume_role_policy = "${data.aws_iam_policy_document.ecs_assume_role.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "task" {
+  policy_arn = "${aws_iam_policy.task_s3.arn}"
+  role = "${aws_iam_role.task.name}"
+}
+
 # role allowing ECS service to CRUD service-linked roles
 data "aws_iam_policy_document" "ecs_service_linked_role" {
   statement {
@@ -242,6 +267,7 @@ resource "aws_ecs_cluster" "main" {
 
 resource "aws_ecs_task_definition" "app" {
   family                   = "${local.project}-app-task"
+  task_role_arn            = "${aws_iam_role.task.arn}"
   execution_role_arn       = "${aws_iam_role.task_execution.arn}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
