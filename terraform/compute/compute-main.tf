@@ -16,7 +16,7 @@ locals {
   public_subnets = "${data.terraform_remote_state.network.public_subnet_ids}"
   private_subnets = "${data.terraform_remote_state.network.private_subnet_ids}"
   task_count = "${length(local.public_subnets)}"
-  app_image = "${aws_ecr_repository.kfb.repository_url}:latest"
+  app_image = "${data.terraform_remote_state.data.ecr_url}:latest"
   task_cpu = 2048
   task_memory = 4096
   app_port = 8080
@@ -71,15 +71,6 @@ data "terraform_remote_state" "data" {
   }
 }
 
-### Container registry
-resource "aws_ecr_repository" "kfb" {
-  name = "com.smackwerks.kfb"
-
-  tags {
-    Name = "${local.project}-ecr"
-    Project = "${local.project}"
-  }
-}
 
 ### Security
 resource "aws_security_group" "lb" {
@@ -328,10 +319,6 @@ resource "aws_cloudwatch_log_stream" "kfb" {
 }
 
 ### Outputs
-output "ecr_url" {
-  value = "${aws_ecr_repository.kfb.repository_url}"
-}
-
 output "alb_domain_name" {
   value = "${aws_alb.main.dns_name}"
 }

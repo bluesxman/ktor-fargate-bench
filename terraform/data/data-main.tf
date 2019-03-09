@@ -11,6 +11,7 @@ provider "aws" {
 
 
 locals {
+  project = "kfb"
   bucket_name = "com.smackwerks-kfb"
 }
 
@@ -33,6 +34,15 @@ resource "aws_s3_bucket" "data" {
   }
 }
 
+resource "aws_ecr_repository" "kfb" {
+  name = "com.smackwerks.${local.project}"
+
+  tags {
+    Name = "${local.project}-ecr"
+    Project = "${local.project}"
+  }
+}
+
 output "bucket_id" {
   value = "${aws_s3_bucket.data.id}"
 }
@@ -43,4 +53,12 @@ output "bucket_arn" {
 
 output "bucket_domain_name" {
   value = "${aws_s3_bucket.data.bucket_domain_name}"
+}
+
+output "ecr_url" {
+  value = "${aws_ecr_repository.kfb.repository_url}"
+}
+
+output "ecr_arn" {
+  value = "${aws_ecr_repository.kfb.arn}"
 }
