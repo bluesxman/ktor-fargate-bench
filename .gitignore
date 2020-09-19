@@ -4,3 +4,4 @@
 out/
 build/
 *.backup
+.DS_Store

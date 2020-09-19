@@ -43,6 +43,21 @@ resource "aws_ecr_repository" "kfb" {
   }
 }
 
+resource "aws_dynamodb_table" "kfb-test" {
+  name             = "test"
+  hash_key         = "TestTableHashKey"
+  billing_mode     = "PAY_PER_REQUEST"
+
+  server_side_encryption {
+    enabled = true
+  }
+
+  attribute {
+    name = "TestTableHashKey"
+    type = "S"
+  }
+}
+
 ### Logging
 
 # Set up cloudwatch group and log stream and retain logs for 30 days
