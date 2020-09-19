@@ -62,6 +62,11 @@ resource "aws_dynamodb_table" "kfb-movies" {
     name = "title"
     type = "S"
   }
+
+  tags {
+    Name = "${local.project}-dynamo-movies"
+    Project = "${local.project}"
+  }
 }
 
 ### Logging
