@@ -1,0 +1,26 @@
+{
+  "name": "yes",
+  "version": "1.0.0",
+  "description": "export AWS_PROFILE=ktor-admin cd terraform/infra tfenv use 0.11.14 terraform init --reconfigure --backend-config=\"bucket=com.smackwerks-tfstate\"",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "test",
+    "etl": "node src/js/MoviesLoadData"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluesxman/ktor-fargate-bench.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bluesxman/ktor-fargate-bench/issues"
+  },
+  "homepage": "https://github.com/bluesxman/ktor-fargate-bench#readme",
+  "dependencies": {
+    "aws-sdk": "^2.756.0"
+  }
+}

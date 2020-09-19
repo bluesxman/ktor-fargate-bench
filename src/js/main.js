@@ -1,5 +1,14 @@
 'use strict'
 
+
+function getDynamo() {
+  
+}
+
+function benchDynamo(calls) {
+
+}
+
 exports.handler = function(event, context, callback) {
   var response = {
     statusCode: 200,

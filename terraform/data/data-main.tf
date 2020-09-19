@@ -43,9 +43,10 @@ resource "aws_ecr_repository" "kfb" {
   }
 }
 
-resource "aws_dynamodb_table" "kfb-test" {
-  name             = "test"
-  hash_key         = "TestTableHashKey"
+resource "aws_dynamodb_table" "kfb-movies" {
+  name             = "Movies"
+  hash_key         = "year"
+  range_key        = "title"
   billing_mode     = "PAY_PER_REQUEST"
 
   server_side_encryption {
@@ -53,7 +54,12 @@ resource "aws_dynamodb_table" "kfb-test" {
   }
 
   attribute {
-    name = "TestTableHashKey"
+    name = "year"
+    type = "N"
+  }
+
+  attribute {
+    name = "title"
     type = "S"
   }
 }
