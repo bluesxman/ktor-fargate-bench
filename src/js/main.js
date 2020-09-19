@@ -5,9 +5,22 @@ AWS.config.update({
     region: "us-east-1"
 });
 
-var docClient = new AWS.DynamoDB.DocumentClient();
+const docClient = new AWS.DynamoDB.DocumentClient();
 
-function queryTitles(callback) {
+function query(params) {
+  return new Promise((resolve, reject) => {
+    docClient.query(params, function(err, data) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data)  
+      }
+    });  
+  });
+}
+
+
+async function queryTitles() {
   var docClient = new AWS.DynamoDB.DocumentClient();
 
   console.log("Querying for movies from 1992 - titles A-L, with genres and lead actor");
@@ -26,45 +39,47 @@ function queryTitles(callback) {
       }
   };
   
-  docClient.query(params, function(err, data) {
-      if (err) {
-          console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
-          callback({
-            statusCode: 500,
-            headers: {
-              'Content-Type': 'application/json; charset=utf-8'
-            },
-            body: err
-          });
-      } else {
-          console.log("Query succeeded.");
-          const response = {
-            statusCode: 200,
-            headers: {
-              'Content-Type': 'application/json; charset=utf-8'
-            },
-            body: JSON.stringify(data.Items, null, 2)
-          }
-          // const response = {
-          //       statusCode: 200,
-          //       headers: {
-          //         'Content-Type': 'text/html; charset=utf-8'
-          //       },
-          //       body: `<p>${JSON.stringify(data.Items, null, 2)}</p>`
-          //     }
-          callback(null, response);
-      }
-  });  
+  const data = await query(params);
+  return data.Items;
 }
 
 function benchDynamo(calls) {
 
 }
 
-exports.handler = function(event, context, callback) {
-  console.log ('entered handler')
+async function respondWith(callback, responseFn) {
+  let response;
 
-  queryTitles(callback)
+  try {
+    console.log(`Calling ${responseFn.name}`);
+    const obj = await responseFn();
+    console.log(`Result: ${obj}`)
+    const body = JSON.stringify(obj, null, 2)
+    response = {
+      statusCode: 200,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+     },
+     body
+    }
+  } catch(err) {
+    console.log(err)
+    response = {
+      statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      // body: JSON.stringify(err, null, 2)
+      body: '{msg: "fail"}'
+    } 
+  }
+
+  console.log(`Responding with:\n${response}`)
+  callback(null, response);
+}
+
+exports.handler = async (event, context, callback) => {
+  await respondWith(callback, queryTitles);
 }
 
 
