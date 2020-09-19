@@ -38,22 +38,20 @@ function queryTitles(callback) {
           });
       } else {
           console.log("Query succeeded.");
-          // const response = {
-          //   statusCode: 200,
-          //   headers: {
-          //     'Content-Type': 'application/json; charset=utf-8'
-          //   },
-          //   body: {
-          //     items: [1, 2, 3],
-          //   }
-          // }
           const response = {
-                statusCode: 200,
-                headers: {
-                  'Content-Type': 'text/html; charset=utf-8'
-                },
-                body: `<p>${JSON.stringify(data.Items, null, 2)}</p>`
-              }
+            statusCode: 200,
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(data.Items, null, 2)
+          }
+          // const response = {
+          //       statusCode: 200,
+          //       headers: {
+          //         'Content-Type': 'text/html; charset=utf-8'
+          //       },
+          //       body: `<p>${JSON.stringify(data.Items, null, 2)}</p>`
+          //     }
           callback(null, response);
       }
   });  
