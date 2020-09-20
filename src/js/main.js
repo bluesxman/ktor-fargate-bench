@@ -40,7 +40,7 @@ async function queryTitles() {
   };
   
   const data = await query(params);
-  return data.Items;
+  return data.Itemsasdasd.foo()
 }
 
 function benchDynamo(calls) {
@@ -48,33 +48,30 @@ function benchDynamo(calls) {
 }
 
 async function respondWith(responseFn) {
-  let response;
-
   try {
     console.log(`Calling ${responseFn.name}`);
     const obj = await responseFn();
     console.log(`Result: ${obj}`)
     const body = JSON.stringify(obj, null, 2)
-    response = {
+    const response = {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json; charset=utf-8'
      },
      body
     }
+    return response;
   } catch(err) {
-    console.log(err)
-    response = {
+    console.error(err)
+    const response = {
       statusCode: 500,
       headers: {
         'Content-Type': 'application/json; charset=utf-8'
       },
-      // body: JSON.stringify(err, null, 2)
-      body: '{msg: "fail"}'
-    } 
+      body: `{ msg: ${err.message} }`
+    }
+    return response;
   }
-
-  return response;
 }
 
 exports.handler = async (event, context, callback) => {
