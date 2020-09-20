@@ -47,7 +47,11 @@ function benchDynamo(calls) {
 
 }
 
-async function respondWith(responseFn) {
+function getRequestId(event, context) {
+  return context.awsRequestId
+}
+
+async function respondWith(responseFn, requestId) {
   try {
     console.log(`Calling ${responseFn.name}`);
     const obj = await responseFn();
@@ -63,19 +67,23 @@ async function respondWith(responseFn) {
     return response;
   } catch(err) {
     console.error(err)
+    const body = {
+      requestId,
+      msg: err.message,
+    }
     const response = {
       statusCode: 500,
       headers: {
         'Content-Type': 'application/json; charset=utf-8'
       },
-      body: `{ msg: ${err.message} }`
+      body: JSON.stringify(body, null, 2)
     }
     return response;
   }
 }
 
 exports.handler = async (event, context, callback) => {
-  return respondWith(queryTitles);
+  return respondWith(queryTitles, getRequestId(event, context));
 }
 
 
