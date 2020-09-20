@@ -13,10 +13,37 @@ function query(params) {
       if (err) {
         reject(err);
       } else {
-        resolve(data)  
+        resolve(data)
       }
-    });  
+    });
   });
+}
+
+function getItem(params) {
+  console.log(`docClient keys: ${Object.keys(docClient)}`)
+  return new Promise((resolve, reject) => {
+    docClient.get(params, function(err, data) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data)
+      }
+    });
+  });
+}
+
+async function getSingleItem() {
+  // console.log("Getting 'The Mosquito Coast'");
+
+  var params = {
+      TableName : "MoviesPartitionOnly",
+      Key: {
+        'title': 'The Mosquito Coast'
+      },
+  };
+
+  const data = await getItem(params);
+  return data.Item;
 }
 
 async function queryYear() {
@@ -39,7 +66,7 @@ async function queryYear() {
 
 async function queryTitles() {
   // console.log("Querying for movies from 1992 - titles A-L, with genres and lead actor");
-  
+
   var params = {
       TableName : "Movies",
       ProjectionExpression:"#yr, title, info.genres, info.actors[0]",
@@ -53,7 +80,7 @@ async function queryTitles() {
           ":letter2": "L"
       }
   };
-  
+
   const data = await query(params);
   return data.Items;
 }
@@ -108,9 +135,15 @@ async function respondWith(responseFn, requestId) {
 }
 
 exports.handler = async (event, context, callback) => {
-  return respondWith(bench, getRequestId(event, context));
+  return respondWith(getSingleItem, getRequestId(event, context));
 }
 
+async function main() {
+  const item = await getSingleItem();
+  console.log(item);
+}
+
+main()
 
 // exports.handler = function(event, context, callback) {
 //   console.log ('entered handler')

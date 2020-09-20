@@ -70,7 +70,7 @@ resource "aws_iam_policy" "lambda_query_movies" {
       "Action": [
         "dynamodb:Query"
       ],
-      "Resource": "arn:aws:dynamodb:us-east-1:535231303859:table/Movies",
+      "Resource": "arn:aws:dynamodb:us-east-1:535231303859:table/Movies*",
       "Effect": "Allow"
     }
   ]

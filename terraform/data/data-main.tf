@@ -69,6 +69,26 @@ resource "aws_dynamodb_table" "kfb-movies" {
   }
 }
 
+resource "aws_dynamodb_table" "kfb-movies-partition" {
+  name             = "MoviesPartitionOnly"
+  hash_key         = "title"
+  billing_mode     = "PAY_PER_REQUEST"
+
+  server_side_encryption {
+    enabled = true
+  }
+
+  attribute {
+    name = "title"
+    type = "S"
+  }
+
+  tags {
+    Name = "${local.project}-dynamo-movies-partition-only"
+    Project = "${local.project}"
+  }
+}
+
 ### Logging
 
 # Set up cloudwatch group and log stream and retain logs for 30 days
