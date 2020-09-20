@@ -43,8 +43,11 @@ async function queryTitles() {
   return data.Items;
 }
 
-function benchDynamo(calls) {
-
+async function benchDynamo() {
+  const start = Date.now()
+  await queryTitles()
+  const end = Date.now()
+  return { millis: (end - start)}
 }
 
 function getRequestId(event, context) {
@@ -83,7 +86,7 @@ async function respondWith(responseFn, requestId) {
 }
 
 exports.handler = async (event, context, callback) => {
-  return respondWith(queryTitles, getRequestId(event, context));
+  return respondWith(benchDynamo, getRequestId(event, context));
 }
 
 
