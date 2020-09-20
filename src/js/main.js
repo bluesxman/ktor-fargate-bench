@@ -47,7 +47,7 @@ function benchDynamo(calls) {
 
 }
 
-async function respondWith(callback, responseFn) {
+async function respondWith(responseFn) {
   let response;
 
   try {
@@ -74,12 +74,11 @@ async function respondWith(callback, responseFn) {
     } 
   }
 
-  console.log(`Responding with:\n${response}`)
-  callback(null, response);
+  return response;
 }
 
 exports.handler = async (event, context, callback) => {
-  await respondWith(callback, queryTitles);
+  return respondWith(queryTitles);
 }
 
 
