@@ -59,10 +59,17 @@ async function queryTitles() {
 }
 
 async function bench() {
-  const start = Date.now()
-  await queryYear()
-  const end = Date.now()
-  return { millis: (end - start)}
+  const iterations = 10
+  let totalTime = 0
+  let i
+
+  for (i = 0; i < iterations; i++) {
+    const start = Date.now()
+    await queryTitles()
+    totalTime += Date.now() - start
+  }
+
+  return { millis: (totalTime / iterations)}
 }
 
 function getRequestId(event, context) {

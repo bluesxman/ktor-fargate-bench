@@ -15,6 +15,7 @@ locals {
 
 resource "aws_lambda_function" "example" {
   function_name = "ServerlessExample"
+  memory_size = 1024
 
   # The bucket name as created earlier with "aws s3api create-bucket"
   s3_bucket = "com.smackwerks-kfb"
