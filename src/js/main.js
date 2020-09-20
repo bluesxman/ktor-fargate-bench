@@ -40,7 +40,7 @@ async function queryTitles() {
   };
   
   const data = await query(params);
-  return data.Itemsasdasd.foo()
+  return data.Items;
 }
 
 function benchDynamo(calls) {
