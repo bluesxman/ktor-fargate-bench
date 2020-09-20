@@ -15,7 +15,7 @@ locals {
 
 resource "aws_lambda_function" "example" {
   function_name = "ServerlessExample"
-  memory_size = 1024
+  # memory_size = 1024
 
   # The bucket name as created earlier with "aws s3api create-bucket"
   s3_bucket = "com.smackwerks-kfb"
@@ -68,7 +68,8 @@ resource "aws_iam_policy" "lambda_query_movies" {
   "Statement": [
     {
       "Action": [
-        "dynamodb:Query"
+        "dynamodb:Query",
+        "dynamodb:GetItem"
       ],
       "Resource": "arn:aws:dynamodb:us-east-1:535231303859:table/Movies*",
       "Effect": "Allow"

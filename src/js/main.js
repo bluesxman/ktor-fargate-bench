@@ -38,7 +38,7 @@ async function getSingleItem() {
   var params = {
       TableName : "MoviesPartitionOnly",
       Key: {
-        'title': 'The Mosquito Coast'
+        title: 'The Mosquito Coast'
       },
   };
 
@@ -92,7 +92,7 @@ async function bench() {
 
   for (i = 0; i < iterations; i++) {
     const start = Date.now()
-    await queryTitles()
+    await getSingleItem()
     totalTime += Date.now() - start
   }
 
@@ -135,25 +135,12 @@ async function respondWith(responseFn, requestId) {
 }
 
 exports.handler = async (event, context, callback) => {
-  return respondWith(getSingleItem, getRequestId(event, context));
+  return respondWith(bench, getRequestId(event, context));
 }
 
-async function main() {
-  const item = await getSingleItem();
-  console.log(item);
-}
-
-main()
-
-// exports.handler = function(event, context, callback) {
-//   console.log ('entered handler')
-
-//   var response = {
-//     statusCode: 200,
-//     headers: {
-//       'Content-Type': 'text/html; charset=utf-8'
-//     },
-//     body: '<p>Hello meh!</p>'
-//   }
-//   callback(null, response)
+// async function main() {
+//   const item = await getSingleItem();
+//   console.log(item);
 // }
+//
+// main()
