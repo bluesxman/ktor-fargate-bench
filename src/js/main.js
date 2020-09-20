@@ -19,11 +19,26 @@ function query(params) {
   });
 }
 
+async function queryYear() {
+  // console.log("Querying for movies from 1921.");
+
+  var params = {
+      TableName : "Movies",
+      KeyConditionExpression: "#yr = :yyyy",
+      ExpressionAttributeNames:{
+          "#yr": "year"
+      },
+      ExpressionAttributeValues: {
+          ":yyyy": 1921
+      }
+  };
+
+  const data = await query(params);
+  return data.Items;
+}
 
 async function queryTitles() {
-  var docClient = new AWS.DynamoDB.DocumentClient();
-
-  console.log("Querying for movies from 1992 - titles A-L, with genres and lead actor");
+  // console.log("Querying for movies from 1992 - titles A-L, with genres and lead actor");
   
   var params = {
       TableName : "Movies",
@@ -43,9 +58,9 @@ async function queryTitles() {
   return data.Items;
 }
 
-async function benchDynamo() {
+async function bench() {
   const start = Date.now()
-  await queryTitles()
+  await queryYear()
   const end = Date.now()
   return { millis: (end - start)}
 }
@@ -86,7 +101,7 @@ async function respondWith(responseFn, requestId) {
 }
 
 exports.handler = async (event, context, callback) => {
-  return respondWith(benchDynamo, getRequestId(event, context));
+  return respondWith(bench, getRequestId(event, context));
 }
 
 
