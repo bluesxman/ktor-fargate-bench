@@ -135,7 +135,7 @@ async function respondWith(responseFn, requestId) {
 }
 
 exports.handler = async (event, context, callback) => {
-  return respondWith(bench, getRequestId(event, context));
+  return respondWith(queryTitles, getRequestId(event, context));
 }
 
 // async function main() {

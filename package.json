@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "test",
-    "etl": "node src/js/MoviesLoadData"
+    "etl": "node src/js/MoviesLoadData",
+    "stress": "artillery run artillery/million.yml"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,8 @@
   "homepage": "https://github.com/bluesxman/ktor-fargate-bench#readme",
   "dependencies": {
     "aws-sdk": "^2.756.0"
+  },
+  "devDependencies": {
+    "artillery": "^1.6.1"
   }
 }
