@@ -1,9 +1,10 @@
 variable "az_count" {
-  type = "string"
+  type    = string
   default = 3
 }
 
 variable "region" {
-  type = "string"
+  type    = string
   default = "us-east-1"
 }
+
