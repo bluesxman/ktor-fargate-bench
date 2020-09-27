@@ -86,13 +86,13 @@ async function queryTitles() {
 }
 
 async function bench() {
-  const iterations = 10
+  const iterations = 20
   let totalTime = 0
   let i
 
   for (i = 0; i < iterations; i++) {
     const start = Date.now()
-    await getSingleItem()
+    await queryTitles()
     totalTime += Date.now() - start
   }
 
@@ -135,7 +135,7 @@ async function respondWith(responseFn, requestId) {
 }
 
 exports.handler = async (event, context, callback) => {
-  return respondWith(queryTitles, getRequestId(event, context));
+  return respondWith(bench, getRequestId(event, context));
 }
 
 // async function main() {

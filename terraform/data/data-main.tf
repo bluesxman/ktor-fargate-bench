@@ -50,7 +50,7 @@ resource "aws_dynamodb_table" "kfb-movies" {
   billing_mode     = "PAY_PER_REQUEST"
 
   server_side_encryption {
-    enabled = true
+    enabled = false
   }
 
   attribute {
@@ -75,7 +75,7 @@ resource "aws_dynamodb_table" "kfb-movies-partition" {
   billing_mode     = "PAY_PER_REQUEST"
 
   server_side_encryption {
-    enabled = true
+    enabled = false
   }
 
   attribute {

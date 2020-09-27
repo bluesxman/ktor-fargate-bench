@@ -1,8 +1,8 @@
 config:
   target: https://tva51g3smg.execute-api.us-east-1.amazonaws.com
   phases:
-    - duration: 100
-      arrivalRate: 5
+    - duration: 1000
+      arrivalRate: 25 
 scenarios:
   - flow:
       - get:
