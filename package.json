@@ -22,9 +22,10 @@
   },
   "homepage": "https://github.com/bluesxman/ktor-fargate-bench#readme",
   "dependencies": {
-    "aws-sdk": "^2.756.0"
+    "aws-serverless-express": "^3.3.8"
   },
   "devDependencies": {
-    "artillery": "^1.6.1"
+    "artillery": "^1.6.1",
+    "aws-sdk": "^2.756.0"
   }
 }
