@@ -15,6 +15,7 @@ locals {
 
 resource "aws_lambda_function" "example" {
   function_name = "ServerlessExample"
+
   # memory_size = 1024
 
   # The bucket name as created earlier with "aws s3api create-bucket"
@@ -27,11 +28,9 @@ resource "aws_lambda_function" "example" {
   handler = "main.handler"
   runtime = "nodejs12.x"
 
-  role = "${aws_iam_role.lambda_exec.arn}"
+  role = aws_iam_role.lambda_exec.arn
 
-  depends_on = [
-    "aws_iam_role_policy_attachment.lambda_query_movies"
-  ]
+  depends_on = [aws_iam_role_policy_attachment.lambda_query_movies]
 }
 
 # IAM role which dictates what other AWS services the Lambda function
@@ -54,6 +53,7 @@ resource "aws_iam_role" "lambda_exec" {
   ]
 }
 EOF
+
 }
 
 # See also the following AWS managed policy: AWSLambdaBasicExecutionRole
@@ -77,17 +77,18 @@ resource "aws_iam_policy" "lambda_query_movies" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_query_movies" {
-  role       = "${aws_iam_role.lambda_exec.name}"
-  policy_arn = "${aws_iam_policy.lambda_query_movies.arn}"
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = aws_iam_policy.lambda_query_movies.arn
 }
 
 # This is to optionally manage the CloudWatch Log Group for the Lambda Function.
 # If skipping this resource configuration, also add "logs:CreateLogGroup" to the IAM policy below.
 resource "aws_cloudwatch_log_group" "example" {
-  name              = "/aws/lambda/${aws_lambda_function.example.function_name}"
+  name = "/aws/lambda/${aws_lambda_function.example.function_name}"
 }
 
 # See also the following AWS managed policy: AWSLambdaBasicExecutionRole
@@ -112,9 +113,11 @@ resource "aws_iam_policy" "lambda_logging" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
-  role       = "${aws_iam_role.lambda_exec.name}"
-  policy_arn = "${aws_iam_policy.lambda_logging.arn}"
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = aws_iam_policy.lambda_logging.arn
 }
+
