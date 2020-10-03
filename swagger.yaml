@@ -44,6 +44,11 @@ paths:
             $ref: "#/definitions/MoviesListing"
         "405":
           description: "Invalid input"
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
   /movies/queryTitles:
     post:
       tags:
@@ -68,6 +73,12 @@ paths:
             $ref: "#/definitions/MoviesListing"
         "400":
           description: "Invalid Query"
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
+
   /movie/getByTitle:
     post:
       tags:
@@ -91,6 +102,11 @@ paths:
             $ref: "#/definitions/Movie"
         "400":
           description: "Invalid Order"
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
 definitions:
   SingleTitleGet:
     type: "object"
