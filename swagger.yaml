@@ -49,6 +49,8 @@ paths:
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         type: "aws_proxy"
+      x-amazon-apigateway-auth:
+        type: "NONE"
   /movies/queryTitles:
     post:
       tags:
@@ -78,7 +80,8 @@ paths:
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         type: "aws_proxy"
-
+      x-amazon-apigateway-auth:
+        type: "NONE"
   /movie/getByTitle:
     post:
       tags:
@@ -107,6 +110,8 @@ paths:
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         type: "aws_proxy"
+      x-amazon-apigateway-auth:
+        type: "NONE"
 definitions:
   SingleTitleGet:
     type: "object"
