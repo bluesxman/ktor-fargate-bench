@@ -9,7 +9,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "tva51g3smg.execute-api.us-east-1.amazonaws.com"
+host: "tva51g3smg.execute-api.us-east-1.amazonaws.com/default"
 basePath: "/"
 tags:
 - name: "movies"
