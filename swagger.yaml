@@ -45,10 +45,7 @@ paths:
         "405":
           description: "Invalid input"
       x-amazon-apigateway-integration:
-        uri: ${lambda_invoke_arn}
-        passthroughBehavior: "when_no_match"
-        httpMethod: "POST"
-        type: "aws_proxy"
+        $ref: "#/components/x-amazon-apigateway-integrations/integration1"
       x-amazon-apigateway-auth:
         type: "NONE"
   /movies/queryTitles:
@@ -76,10 +73,7 @@ paths:
         "400":
           description: "Invalid Query"
       x-amazon-apigateway-integration:
-        uri: ${lambda_invoke_arn}
-        passthroughBehavior: "when_no_match"
-        httpMethod: "POST"
-        type: "aws_proxy"
+        $ref: "#/components/x-amazon-apigateway-integrations/integration1"
       x-amazon-apigateway-auth:
         type: "NONE"
   /movie/getByTitle:
@@ -106,10 +100,7 @@ paths:
         "400":
           description: "Invalid Order"
       x-amazon-apigateway-integration:
-        uri: ${lambda_invoke_arn}
-        passthroughBehavior: "when_no_match"
-        httpMethod: "POST"
-        type: "aws_proxy"
+        $ref: "#/components/x-amazon-apigateway-integrations/integration1"
       x-amazon-apigateway-auth:
         type: "NONE"
 definitions:
@@ -174,3 +165,10 @@ definitions:
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
+components:
+  x-amazon-apigateway-integrations:
+    integration1:
+      uri: ${lambda_invoke_arn}
+      passthroughBehavior: "when_no_match"
+      httpMethod: "POST"
+      type: "aws_proxy"
