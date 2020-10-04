@@ -135,6 +135,7 @@ async function respondWith(responseFn, requestId) {
 }
 
 exports.handler = async (event, context, callback) => {
+  console.log('Event received')
   return respondWith(bench, getRequestId(event, context));
 }
 
