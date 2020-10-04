@@ -19,14 +19,18 @@ tags:
     url: "http://swagger.io"
 schemes:
 - "https"
-base-integration: &base-integration
-  uri: ${lambda_invoke_arn}
-  passthroughBehavior: "when_no_match"
-  httpMethod: "POST"
-  type: "aws_proxy"
-paths:
+base-endpoint: &base-endpoint
+  x-amazon-apigateway-integration:
+    uri: ${lambda_invoke_arn}
+    passthroughBehavior: "when_no_match"
+    httpMethod: "POST"
+    type: "aws_proxy"
+  x-amazon-apigateway-auth:
+    type: "NONE"
+paths: 
   /movies/queryYear/{year}:
     get:
+      <<: *base-endpoint
       tags:
       - "movies"
       summary: "Add a new pet to the store"
@@ -49,11 +53,9 @@ paths:
             $ref: "#/definitions/MoviesListing"
         "405":
           description: "Invalid input"
-      x-amazon-apigateway-integration: *base-integration
-      x-amazon-apigateway-auth:
-        type: "NONE"
   /movies/queryTitles:
     post:
+      <<: *base-endpoint
       tags:
       - "movies"
       summary: "Place an order for a pet"
@@ -76,11 +78,9 @@ paths:
             $ref: "#/definitions/MoviesListing"
         "400":
           description: "Invalid Query"
-      x-amazon-apigateway-integration: *base-integration
-      x-amazon-apigateway-auth:
-        type: "NONE"
   /movie/getByTitle:
     post:
+      <<: *base-endpoint
       tags:
       - "movies"
       summary: "Get by title"
@@ -102,9 +102,6 @@ paths:
             $ref: "#/definitions/Movie"
         "400":
           description: "Invalid Order"
-      x-amazon-apigateway-integration: *base-integration
-      x-amazon-apigateway-auth:
-        type: "NONE"
 definitions:
   SingleTitleGet:
     type: "object"
@@ -167,10 +164,3 @@ definitions:
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
-components:
-  x-amazon-apigateway-integrations:
-    integration1:
-      uri: ${lambda_invoke_arn}
-      passthroughBehavior: "when_no_match"
-      httpMethod: "POST"
-      type: "aws_proxy"
