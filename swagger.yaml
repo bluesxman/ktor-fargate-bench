@@ -33,9 +33,9 @@ paths:
       <<: *base-endpoint
       tags:
       - "movies"
-      summary: "Add a new pet to the store"
+      summary: "Query all movies for a year"
       description: ""
-      operationId: "addPet"
+      operationId: "queryYear"
       consumes:
       - "application/json"
       produces:
@@ -58,9 +58,9 @@ paths:
       <<: *base-endpoint
       tags:
       - "movies"
-      summary: "Place an order for a pet"
+      summary: "Query titles by letter for a year"
       description: ""
-      operationId: "placeOrder"
+      operationId: "queryTitlesForYear"
       produces:
       - "application/xml"
       - "application/json"
