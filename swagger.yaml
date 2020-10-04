@@ -19,6 +19,11 @@ tags:
     url: "http://swagger.io"
 schemes:
 - "https"
+base-integration: &base-integration
+  uri: ${lambda_invoke_arn}
+  passthroughBehavior: "when_no_match"
+  httpMethod: "POST"
+  type: "aws_proxy"
 paths:
   /movies/queryYear/{year}:
     get:
@@ -44,8 +49,7 @@ paths:
             $ref: "#/definitions/MoviesListing"
         "405":
           description: "Invalid input"
-      x-amazon-apigateway-integration:
-        $ref: "#/components/x-amazon-apigateway-integrations/integration1"
+      x-amazon-apigateway-integration: *base-integration
       x-amazon-apigateway-auth:
         type: "NONE"
   /movies/queryTitles:
@@ -72,8 +76,7 @@ paths:
             $ref: "#/definitions/MoviesListing"
         "400":
           description: "Invalid Query"
-      x-amazon-apigateway-integration:
-        $ref: "#/components/x-amazon-apigateway-integrations/integration1"
+      x-amazon-apigateway-integration: *base-integration
       x-amazon-apigateway-auth:
         type: "NONE"
   /movie/getByTitle:
@@ -99,8 +102,7 @@ paths:
             $ref: "#/definitions/Movie"
         "400":
           description: "Invalid Order"
-      x-amazon-apigateway-integration:
-        $ref: "#/components/x-amazon-apigateway-integrations/integration1"
+      x-amazon-apigateway-integration: *base-integration
       x-amazon-apigateway-auth:
         type: "NONE"
 definitions:
