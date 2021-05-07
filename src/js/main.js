@@ -48,9 +48,8 @@ async function getSingleItem() {
   return data.Item;
 }
 
-async function queryYear() {
-  // console.log("Querying for movies from 1921.");
-
+async function queryYear(event) {
+  const year = 2005; //event.pathParameters.year;
   var params = {
       TableName : "Movies",
       KeyConditionExpression: "#yr = :yyyy",
@@ -58,7 +57,7 @@ async function queryYear() {
           "#yr": "year"
       },
       ExpressionAttributeValues: {
-          ":yyyy": 1921
+          ":yyyy": year
       }
   };
 
@@ -105,12 +104,19 @@ function getRequestId(event, context) {
   return context.awsRequestId
 }
 
-async function respondWith(responseFn, requestId) {
+function pprint(msg, obj) {
+  console.log(`${msg}: ${JSON.stringify(obj, null, 2)}`);
+}
+
+async function respondWith(event, context, responseFn) {
   try {
+    pprint('Event', event);
+    pprint('Context', context);
+    const requestId = getRequestId(event, context);
     console.log(`Calling ${responseFn.name}`);
-    const obj = await responseFn();
-    console.log(`Result: ${obj}`)
+    const obj = await responseFn(event);
     const body = JSON.stringify(obj, null, 2)
+    console.log(`Result: ${body}`)
     const response = {
       statusCode: 200,
       headers: {
@@ -136,9 +142,9 @@ async function respondWith(responseFn, requestId) {
   }
 }
 
-exports.handler = async (event, context, callback) => {
+exports.handler = async (event, context) => {
   console.log('Event received')
-  return respondWith(queryYear, getRequestId(event, context));
+  return respondWith(event, context, queryYear);
 }
 
 // async function main() {

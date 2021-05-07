@@ -19,14 +19,19 @@ tags:
     url: "http://swagger.io"
 schemes:
 - "https"
+x-amazon-apigateway-request-validators:
+  basic:
+    validateRequestBody: true
+    validateRequestParameters: true
 base-endpoint: &base-endpoint
   x-amazon-apigateway-integration:
     uri: ${lambda_invoke_arn}
-    passthroughBehavior: "when_no_match"
+    passthroughBehavior: "never"
     httpMethod: "POST"
-    type: "aws_proxy"
+    type: "aws"
   x-amazon-apigateway-auth:
     type: "NONE"
+  x-amazon-apigateway-request-validator: basic
 paths: 
   /movies/queryYear/{year}:
     get:
