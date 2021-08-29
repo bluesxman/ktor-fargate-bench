@@ -1,5 +1,4 @@
 provider "template" {
-  version = "~> 2.1"
 }
 
 resource "aws_api_gateway_rest_api" "example" {
