@@ -27,6 +27,6 @@
   },
   "devDependencies": {
     "artillery": "^1.7.7",
-    "aws-sdk": "^2.756.0"
+    "aws-sdk": "^2.814.0"
   }
 }
